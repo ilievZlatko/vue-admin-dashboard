@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import * as netlifyIdentityWidget from 'netlify-identity-widget'
+
 import Home from '../views/Home.vue'
 import Team from '../views/Team.vue'
 import SignIn from '../views/SignInFlow/SingIn.vue'
@@ -10,11 +12,17 @@ const routes = [
 		path: '/',
 		name: 'home',
 		component: Home,
+		meta: {
+			requiresAuth: true,
+		},
 	},
 	{
-		path: '/team',
-		name: 'team',
+		path: '/teams',
+		name: 'teams',
 		component: Team,
+		meta: {
+			requiresAuth: true,
+		},
 	},
 	{
 		path: '/signin',
@@ -36,6 +44,17 @@ const routes = [
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes,
+})
+
+router.beforeEach((to, from, next) => {
+	const currentUser = netlifyIdentityWidget.currentUser()
+	const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+	if (requiresAuth && !currentUser) {
+		next('signin')
+	} else {
+		next()
+	}
 })
 
 export default router
