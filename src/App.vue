@@ -41,19 +41,6 @@ p {
   @include large-text-bold($purple);
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: $white;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
 h4 {
   margin: 0;
   line-height: 34px;
